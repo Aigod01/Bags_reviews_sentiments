@@ -1,0 +1,5 @@
+brand,total_reviews,avg_sentiment,positive_pct,negative_pct,sarcasm_detected_pct,top_praises,top_complaints,aspect_wheels,aspect_handle,aspect_material,aspect_zipper,aspect_size,aspect_durability,aspect_price,aspect_looks
+American Tourister,95,0.044,50.5,41.1,8.4,Error: Error code: 429 - {'error': {'message': 'Rate limi,Error: Error code: 429 - {'error': {'message': 'Rate limi,0.562,-0.625,0.309,0.333,-0.269,-0.228,0.258,0.814
+Safari,82,-0.02,43.9,36.6,3.7,Error: Error code: 429 - {'error': {'message': 'Rate limi,Error: Error code: 429 - {'error': {'message': 'Rate limi,-0.72,-0.944,-1.0,,-0.25,-0.347,0.662,0.638
+Skybags,91,0.0,0.0,0.0,0.0,N/A,N/A,,,,,,,,
+VIP,93,0.0,0.0,0.0,0.0,N/A,N/A,,,,,,,,

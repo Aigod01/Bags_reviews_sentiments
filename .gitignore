@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+**/node_modules/
+__pycache__/
+*.pyc
+*.pyo
+
+# Build & outputs
+dist/
+build/
+.vite/
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
