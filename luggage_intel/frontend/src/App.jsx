@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
-  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend
 } from 'recharts';
-import { 
-  Search, ShoppingBag, Award, TrendingUp, CheckCircle2, AlertCircle, 
-  ExternalLink, ShieldCheck, Truck, Sparkles, Star, ThumbsUp, DollarSign, 
-  Layers, MessageSquare, ArrowRight, Zap, RefreshCw, Check, Info
+import {
+  Search, Award, TrendingUp, CheckCircle2, AlertCircle,
+  ExternalLink, Truck, Star, ThumbsUp, DollarSign,
+  Layers, MessageSquare, Zap, RefreshCw, Check, Info, Tag, ArrowRight
 } from 'lucide-react';
 
 const SUGGESTIONS = [
-  "Safari Thorium Trolley Bag 65cm",
   "Sony WH-1000XM4 Noise Cancelling",
   "OnePlus Nord CE 4",
   "Philips Digital Air Fryer 4.1L",
   "Green Soul Ergonomic Office Chair",
-  "American Tourister Ivy Trolley Bag"
+  "Samsung Galaxy Watch 6",
+  "Instant Pot Duo 6 Quart"
 ];
 
 function App() {
@@ -32,9 +31,9 @@ function App() {
   const [liveResult, setLiveResult] = useState(null);
   const [testingReview, setTestingReview] = useState(false);
 
-  // Perform initial search on mount with a great default
+  // Perform an initial search on mount so the page isn't empty
   useEffect(() => {
-    handleSearch("Safari Thorium Trolley Bag 65cm");
+    handleSearch(SUGGESTIONS[0]);
   }, []);
 
   const handleSearch = async (searchQuery) => {
@@ -85,35 +84,26 @@ function App() {
   const platforms = comparisonData?.platform_comparison || [];
   const aspects = comparisonData?.aspect_ratings || [];
   const insights = comparisonData?.strategic_insights || [];
+  const formatPrice = (price) => price == null ? 'Unavailable' : `₹${Number(price).toLocaleString('en-IN')}`;
+  const formatRating = (rating) => rating == null ? 'Unavailable' : `${rating} / 5`;
 
   return (
     <div className="app-layout">
-      {/* Background Decorative Glows */}
-      <div className="bg-glow bg-glow-1" />
-      <div className="bg-glow bg-glow-2" />
-
       {/* Navigation Header */}
       <header className="main-header">
         <div className="header-content">
           <div className="brand-logo">
             <div className="logo-icon">
-              <Sparkles size={22} />
+              <Tag size={18} />
             </div>
             <div>
               <h1 className="brand-title">SmartBuy AI</h1>
-              <span className="brand-tagline">Multi-Platform E-Commerce Intelligence & Best-Deal Recommender</span>
+              <span className="brand-tagline">Find the best real deal, across every store that has it</span>
             </div>
           </div>
 
-          <div className="platform-badges-header">
-            <div className="live-status-pill">
-              <span className="pulse-dot" /> Live Market Scraper
-            </div>
-            <span className="platform-pill amazon">Amazon</span>
-            <span className="platform-pill flipkart">Flipkart</span>
-            <span className="platform-pill croma">Croma</span>
-            <span className="platform-pill reliance">Reliance Digital</span>
-            <span className="platform-pill tatacliq">Tata CLiQ</span>
+          <div className="live-status-pill">
+            <span className="pulse-dot" /> Live retailer data
           </div>
         </div>
       </header>
@@ -123,8 +113,8 @@ function App() {
         {/* Search Hero Box */}
         <section className="search-hero glass-panel">
           <div className="search-intro">
-            <h2>Search Any Product & Find the #1 Best Deal to Buy</h2>
-            <p>Our AI scans top 5 e-commerce platforms, analyzes prices, user reviews, sentiment & defects to crown the ultimate winner.</p>
+            <h2>Find the best real deal on anything</h2>
+            <p>We check live listings across retailers and compare price, rating, and reviews to find the strongest match.</p>
           </div>
 
           <form 
@@ -147,7 +137,7 @@ function App() {
               <input 
                 type="number" 
                 className="budget-input"
-                placeholder="Max Budget (Optional)"
+                placeholder="Max budget"
                 value={maxBudget}
                 onChange={(e) => setMaxBudget(e.target.value)}
               />
@@ -165,8 +155,8 @@ function App() {
                 </>
               ) : (
                 <>
-                  <Sparkles size={18} />
                   <span>Compare & Find Best</span>
+                  <ArrowRight size={18} />
                 </>
               )}
             </button>
@@ -193,11 +183,11 @@ function App() {
           <div className="loading-state glass-panel">
             <div className="loading-spinner-ring" />
             <div className="loading-text">
-              <h3>AI Market Intelligence In Progress</h3>
+              <h3>Looking this up for you</h3>
               <p>
-                {loadingStep === 1 && "1/3 Searching catalogs across Amazon, Flipkart, Croma, Reliance Digital & Tata CLiQ..."}
-                {loadingStep === 2 && "2/3 Extracting verified user reviews, rating consistency & pricing spread..."}
-                {loadingStep === 3 && "3/3 Groq Llama 3.3 MCDM Engine ranking sentiment, durability & value for money..."}
+                {loadingStep === 1 && "Checking listings across retailers..."}
+                {loadingStep === 2 && "Comparing prices, ratings, and reviews..."}
+                {loadingStep === 3 && "Picking the best match..."}
               </p>
             </div>
           </div>
@@ -208,39 +198,39 @@ function App() {
           <>
             {/* Navigation Tabs */}
             <div className="tab-navigation">
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
                 onClick={() => setActiveTab('overview')}
               >
-                <Award size={18} /> #1 Top Recommendation
+                <Award size={16} /> Best Match
               </button>
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'comparison' ? 'active' : ''}`}
                 onClick={() => setActiveTab('comparison')}
               >
-                <Layers size={18} /> 5-Platform Comparison Matrix
+                <Layers size={16} /> Compare All
               </button>
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'analytics' ? 'active' : ''}`}
                 onClick={() => setActiveTab('analytics')}
               >
-                <TrendingUp size={18} /> Deep Analytics & Charts
+                <TrendingUp size={16} /> Charts
               </button>
-              <button 
+              <button
                 className={`tab-btn ${activeTab === 'tester' ? 'active' : ''}`}
                 onClick={() => setActiveTab('tester')}
               >
-                <MessageSquare size={18} /> Live Review Tester
+                <MessageSquare size={16} /> Review Tester
               </button>
             </div>
 
-            {/* TAB 1: OVERVIEW & #1 WINNER SPOTLIGHT */}
+            {/* TAB 1: OVERVIEW & WINNER SPOTLIGHT */}
             {activeTab === 'overview' && winner && (
               <div className="overview-container">
-                {/* 🏆 THE WINNER CARD */}
+                {/* Winner card */}
                 <div className="winner-card glass-panel highlight-gold">
                   <div className="winner-badge-ribbon">
-                    <Award size={18} /> #1 BEST OVERALL CHOICE TO BUY
+                    <Award size={15} /> Best match for this search
                   </div>
 
                   <div className="winner-layout">
@@ -255,8 +245,7 @@ function App() {
 
                       <div className="price-box">
                         <div className="price-main">
-                          <span className="price-symbol">₹</span>
-                          <span className="price-amount">{winner.best_price?.toLocaleString('en-IN')}</span>
+                          <span className="price-amount">{formatPrice(winner.best_price)}</span>
                         </div>
                         {winner.mrp && (
                           <div className="mrp-wrapper">
@@ -269,40 +258,49 @@ function App() {
                       {/* Score Metrics Grid */}
                       <div className="kpi-grid">
                         <div className="kpi-item">
-                          <div className="kpi-icon"><Star size={16} color="#fbbf24" /></div>
+                          <div className="kpi-icon"><Star size={16} color="#D9A441" /></div>
                           <div>
-                            <div className="kpi-val">{winner.rating} / 5</div>
-                            <div className="kpi-lbl">{winner.review_count} Reviews</div>
+                            <div className="kpi-val">{formatRating(winner.rating)}</div>
+                            <div className="kpi-lbl">{winner.review_count == null ? 'No verified reviews' : `${winner.review_count} Reviews`}</div>
                           </div>
                         </div>
 
                         <div className="kpi-item">
-                          <div className="kpi-icon"><ThumbsUp size={16} color="#22c55e" /></div>
+                          <div className="kpi-icon"><ThumbsUp size={16} color="#2F9E64" /></div>
                           <div>
-                            <div className="kpi-val">{winner.positive_sentiment_pct || 88}% Positive</div>
-                            <div className="kpi-lbl">AI Sentiment Score</div>
+                            <div className="kpi-val">{winner.discount_pct == null ? 'Unavailable' : `${winner.discount_pct}% OFF`}</div>
+                            <div className="kpi-lbl">Discount vs MRP</div>
                           </div>
                         </div>
 
                         <div className="kpi-item">
-                          <div className="kpi-icon"><Zap size={16} color="#60a5fa" /></div>
+                          <div className="kpi-icon"><Zap size={16} color="#E85D4C" /></div>
                           <div>
-                            <div className="kpi-val">{winner.value_score || 95}/100</div>
-                            <div className="kpi-lbl">Value-for-Money Index</div>
+                            <div className="kpi-val">{winner.match_score == null ? 'Unavailable' : `${winner.match_score}/100`}</div>
+                            <div className="kpi-lbl">Match Score (price + rating + reviews)</div>
                           </div>
                         </div>
                       </div>
 
+                      {/* Tags / Badges */}
+                      {winner.tags && winner.tags.length > 0 && (
+                        <div className="theme-pills" style={{ margin: '0.5rem 0 1rem' }}>
+                          {winner.tags.map((tag, i) => (
+                            <span key={i} className="theme-pill"><Tag size={12} style={{ marginRight: 4 }} />{tag}</span>
+                          ))}
+                        </div>
+                      )}
+
                       {/* Why Buy Rationale */}
                       <div className="why-buy-box">
-                        <h4><Sparkles size={16} /> Why This is the #1 Recommended Pick:</h4>
+                        <h4>Why this one</h4>
                         <p>{winner.why_buy}</p>
                       </div>
 
                       {/* Pros & Cons */}
                       <div className="pros-cons-grid">
                         <div className="pros-box">
-                          <h5><CheckCircle2 size={16} color="#22c55e" /> Key Strengths</h5>
+                          <h5><CheckCircle2 size={16} color="#2F9E64" /> Key Strengths</h5>
                           <ul>
                             {winner.pros?.map((pro, i) => (
                               <li key={i}><Check size={14} className="pro-check" /> {pro}</li>
@@ -312,7 +310,7 @@ function App() {
 
                         {winner.cons && winner.cons.length > 0 && (
                           <div className="cons-box">
-                            <h5><AlertCircle size={16} color="#f59e0b" /> Keep in Mind</h5>
+                            <h5><AlertCircle size={16} color="#C97A1F" /> Keep in Mind</h5>
                             <ul>
                               {winner.cons.map((con, i) => (
                                 <li key={i}><Info size={14} className="con-info" /> {con}</li>
@@ -322,15 +320,14 @@ function App() {
                         )}
                       </div>
 
-                      {/* Warranty & Delivery Badges */}
-                      <div className="perks-row">
-                        <div className="perk-badge">
-                          <ShieldCheck size={16} /> {winner.warranty_delivery || "1 Year Brand Warranty"}
+                      {/* Delivery info -- only shown when the retailer actually provided it */}
+                      {winner.warranty_delivery && (
+                        <div className="perks-row">
+                          <div className="perk-badge">
+                            <Truck size={14} /> {winner.warranty_delivery}
+                          </div>
                         </div>
-                        <div className="perk-badge">
-                          <Truck size={16} /> Fast Verified Store Delivery
-                        </div>
-                      </div>
+                      )}
 
                       {/* Big CTA Button */}
                       <div className="action-row">
@@ -340,7 +337,7 @@ function App() {
                           rel="noopener noreferrer"
                           className="buy-winner-btn"
                         >
-                          <span>Buy Now on {winner.best_platform} at ₹{winner.best_price?.toLocaleString('en-IN')}</span>
+                          <span>{winner.best_price == null ? 'Open retailer search' : `Buy Now on ${winner.best_platform} at ${formatPrice(winner.best_price)}`}</span>
                           <ExternalLink size={20} />
                         </a>
                       </div>
@@ -351,7 +348,7 @@ function App() {
                 {/* RUNNER-UP CARDS */}
                 {runnerUps.length > 0 && (
                   <div className="runner-ups-section">
-                    <h3>Alternative Category Picks</h3>
+                    <h3>Other options worth a look</h3>
                     <div className="runner-grid">
                       {runnerUps.map((runner, idx) => (
                         <div key={idx} className="glass-panel runner-card">
@@ -359,7 +356,7 @@ function App() {
                           <h4>{runner.title}</h4>
                           <p className="runner-highlight">{runner.highlight}</p>
                           <div className="runner-meta">
-                            <div className="runner-price">₹{runner.price?.toLocaleString('en-IN')}</div>
+                            <div className="runner-price">{formatPrice(runner.price)}</div>
                             <div className="runner-platform">on {runner.platform}</div>
                           </div>
                           <a 
@@ -379,7 +376,7 @@ function App() {
                 {/* STRATEGIC SHOPPING INSIGHTS */}
                 {insights.length > 0 && (
                   <div className="glass-panel insights-panel">
-                    <h3><Sparkles size={20} /> AI Strategic Shopping Insights for "{comparisonData.query}"</h3>
+                    <h3>Good to know</h3>
                     <ul className="insights-list">
                       {insights.map((insight, idx) => (
                         <li key={idx}>
@@ -398,8 +395,8 @@ function App() {
               <div className="comparison-tab-container">
                 <div className="glass-panel table-panel">
                   <div className="table-header">
-                    <h3>Multi-Platform Direct Comparison Matrix</h3>
-                    <p>Compare exact price, delivery, and user sentiment across all 5 leading Indian retail platforms.</p>
+                    <h3>All listings found</h3>
+                    <p>Every live listing found for this search, with real price, rating, and tags/badges.</p>
                   </div>
 
                   <div className="responsive-table-wrapper">
@@ -410,8 +407,7 @@ function App() {
                           <th>Product Name</th>
                           <th>Price (INR)</th>
                           <th>Rating & Reviews</th>
-                          <th>Positive Sentiment</th>
-                          <th>Delivery Speed</th>
+                          <th>Tags</th>
                           <th>Deal Status</th>
                           <th>Action</th>
                         </tr>
@@ -428,34 +424,38 @@ function App() {
                             </td>
                             <td className="product-title-cell">{p.product_name}</td>
                             <td className="price-cell">
-                              <strong>₹{p.price?.toLocaleString('en-IN')}</strong>
+                              <strong>{formatPrice(p.price)}</strong>
                               {p.discount_pct && <span className="table-discount">({p.discount_pct}% off)</span>}
                             </td>
                             <td>
                               <div className="table-rating">
-                                <Star size={14} fill="#fbbf24" stroke="none" />
-                                <span>{p.rating}</span>
-                                <small>({p.review_count})</small>
+                                <Star size={14} fill="#D9A441" stroke="none" />
+                                <span>{p.rating == null ? 'Unavailable' : p.rating}</span>
+                                {p.review_count != null && <small>({p.review_count})</small>}
                               </div>
                             </td>
                             <td>
-                              <div className="sentiment-bar-wrapper">
-                                <div className="sentiment-bar-fill" style={{ width: `${p.positive_sentiment_pct}%` }} />
-                                <span className="sentiment-bar-text">{p.positive_sentiment_pct}%</span>
-                              </div>
-                            </td>
-                            <td>{p.delivery_speed}</td>
-                            <td>
-                              {p.best_deal_here ? (
-                                <span className="best-deal-badge">🏆 Lowest Price</span>
+                              {p.tags && p.tags.length > 0 ? (
+                                <div className="theme-pills">
+                                  {p.tags.slice(0, 2).map((tag, i) => (
+                                    <span key={i} className="theme-pill">{tag}</span>
+                                  ))}
+                                </div>
                               ) : (
-                                <span className="standard-deal-badge">Available</span>
+                                <span style={{ color: 'var(--text-muted)' }}>—</span>
                               )}
                             </td>
                             <td>
-                              <a 
-                                href={p.product_url} 
-                                target="_blank" 
+                              {p.best_deal_here ? (
+                                <span className="best-deal-badge"><Award size={12} /> Best match</span>
+                              ) : (
+                                <span className="standard-deal-badge">{p.scrape_status === 'blocked' ? 'Blocked' : p.price == null ? 'Unavailable' : 'Available'}</span>
+                              )}
+                            </td>
+                            <td>
+                              <a
+                                href={p.product_url}
+                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="table-buy-btn"
                               >
@@ -476,7 +476,7 @@ function App() {
               <div className="analytics-tab-container grid grid-cols-2">
                 {/* Price Comparison Bar Chart */}
                 <div className="glass-panel">
-                  <h3><DollarSign size={20} /> Multi-Store Price Comparison (INR)</h3>
+                  <h3><DollarSign size={18} /> Price by retailer</h3>
                   <div className="chart-container">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={platforms}>
@@ -485,7 +485,7 @@ function App() {
                         <YAxis stroke="#94a3b8" />
                         <Tooltip 
                           contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px' }}
-                          formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Price']}
+                          formatter={(value) => [formatPrice(value), 'Price']}
                         />
                         <Legend />
                         <Bar dataKey="price" name="Price (₹)" fill="#38bdf8" radius={[6, 6, 0, 0]} />
@@ -494,21 +494,21 @@ function App() {
                   </div>
                 </div>
 
-                {/* Positive Sentiment % Comparison */}
+                {/* Rating Comparison */}
                 <div className="glass-panel">
-                  <h3><ThumbsUp size={20} /> Customer Positive Sentiment (%)</h3>
+                  <h3><ThumbsUp size={18} /> Rating by retailer</h3>
                   <div className="chart-container">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={platforms}>
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
                         <XAxis dataKey="platform" stroke="#94a3b8" />
-                        <YAxis domain={[0, 100]} stroke="#94a3b8" />
-                        <Tooltip 
+                        <YAxis domain={[0, 5]} stroke="#94a3b8" />
+                        <Tooltip
                           contentStyle={{ backgroundColor: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px' }}
-                          formatter={(value) => [`${value}%`, 'Positive Reviews']}
+                          formatter={(value) => [`${value}★`, 'Rating']}
                         />
                         <Legend />
-                        <Bar dataKey="positive_sentiment_pct" name="Positive Sentiment %" fill="#22c55e" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="rating" name="Rating (out of 5)" fill="#22c55e" radius={[6, 6, 0, 0]} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -517,7 +517,7 @@ function App() {
                 {/* Aspect-Level Quality Scores */}
                 {aspects.length > 0 && (
                   <div className="glass-panel" style={{ gridColumn: 'span 2' }}>
-                    <h3><Award size={20} /> Aspect-Level Quality Breakdown</h3>
+                    <h3><Award size={18} /> Quality breakdown</h3>
                     <div className="aspects-bar-list">
                       {aspects.map((asp, idx) => (
                         <div key={idx} className="aspect-bar-row">
@@ -541,7 +541,7 @@ function App() {
             {activeTab === 'tester' && (
               <div className="tester-tab-container">
                 <div className="glass-panel">
-                  <h3><MessageSquare size={20} /> Live Customer Review Sentiment Analyzer</h3>
+                  <h3><MessageSquare size={18} /> Try the review analyzer</h3>
                   <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
                     Paste any custom review from Amazon, Flipkart, or offline retail to test real-time sentiment polarity and theme extraction.
                   </p>
@@ -599,7 +599,7 @@ function App() {
 
       {/* Footer */}
       <footer className="main-footer">
-        <p>SmartBuy AI — Powered by Groq LLM Multi-Criteria Decision Model. Real-time comparison across India's top 5 e-commerce platforms.</p>
+        <p>SmartBuy AI — Real-time price, rating, and review comparison across Indian e-commerce retailers.</p>
       </footer>
     </div>
   );

@@ -1,0 +1,3 @@
+[
+    "Failed to generate insights due to an error: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jqh013hje0zbqt2qf65ez959` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199966, Requested 915. Please try again in 6m20.592s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+]

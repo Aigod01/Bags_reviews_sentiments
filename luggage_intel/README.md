@@ -1,35 +1,20 @@
-# 🛒 SmartBuy AI — Universal Multi-Platform E-Commerce Product Finder & Recommender
+# 🛒 SmartBuy AI — Universal Multi-Platform E-Commerce Product Finder
 
-**SmartBuy AI** transforms product shopping by letting you search for **ANY product** (electronics, luggage, appliances, fashion, furniture, etc.), automatically comparing options across India's **Top 5 E-Commerce Platforms** (Amazon India, Flipkart, Croma, Reliance Digital, and Tata CLiQ), and using an **LLM Multi-Criteria Decision Model (MCDM)** to crown the **#1 Overall Best Product & Store Deal to Buy**.
+**SmartBuy AI** lets you search for **any product** and automatically compares real, live listings across Indian e-commerce retailers (Amazon India, Flipkart, Croma, Reliance Digital, Tata CLiQ, and others when they carry the product), picking a **#1 Best Match** using a transparent price + rating + review-volume score.
+
+All comparison data (price, rating, review count, tags/badges, buy link) comes from a real product-data API (SerpApi's Google Shopping engine) — nothing is scraped, guessed, or simulated. If no API key is configured, the app is upfront about it and gives you direct search links to each retailer instead of fake numbers.
 
 ---
 
 ## 🌟 Key Features
 
-1. **Universal Product Search:** Type any product name or category (e.g. *"Sony WH-1000XM4"*, *"Safari Thorium 65cm Luggage"*, *"OnePlus Nord CE 4"*, *"Air Fryer 4L"*).
-2. **Top 5 E-Commerce Comparison:**
-   - 🟠 **Amazon India**
-   - 🔵 **Flipkart**
-   - 🟢 **Croma**
-   - 🔴 **Reliance Digital**
-   - 🟣 **Tata CLiQ**
-3. **🏆 #1 Best Choice Spotlight (Winner Verdict):**
-   - Crowns the undisputed best product with the best store deal.
-   - Shows lowest direct price, verified customer rating, positive sentiment %, and Value-for-Money Index (out of 100).
-   - "Why You Should Buy This" comprehensive AI reasoning.
-   - Key Strengths (Pros) & Watch-outs (Cons).
-   - Direct "Buy Now" button opening the store deal.
-4. **Alternative Category Picks:**
-   - 🥈 *Best Budget Alternative* (for tight budgets).
-   - ⭐ *Best Premium / Feature-Packed Pick* (for max durability & features).
-5. **Side-by-Side 5-Store Comparison Matrix:**
-   - Transparent tabular comparison of Price, Rating, Review Volume, Positive Sentiment %, Delivery Speed, and Store Links.
-6. **Deep Visual Analytics & Charts:**
-   - Multi-Store Price Comparison Bar Chart.
-   - Positive Review Sentiment (%) Comparison.
-   - Aspect-Level Quality Breakdown (Build, Value, Performance, Support, Design).
-7. **Live Review Sentiment Tester:**
-   - Paste any customer review to test real-time sentiment polarity and extract key themes.
+1. **Universal Product Search:** type any product name (e.g. *"Sony WH-1000XM4"*, *"OnePlus Nord CE 4"*, *"Air Fryer 4L"*, *"Safari Trolley Bag"*).
+2. **Real live retailer data**, not scraped/estimated — price, MRP/discount, star rating, review count, and badges/tags pulled fresh per search.
+3. **🏆 Best Match Spotlight:** picks the strongest overall listing using a transparent composite score (price 45% / rating 35% / review volume 20%), with the "why" spelled out.
+4. **Alternative picks:** cheapest other listing found, and highest-rated other listing found.
+5. **Side-by-side comparison matrix** of every retailer listing found for that search — price, rating, reviews, tags, and a direct buy link. Listings with missing data are shown as "Unavailable", never filled in with a guess.
+6. **Optional budget filter:** prefers listings at or under your budget when you set one.
+7. **Live Review Sentiment Tester:** paste any customer review to test sentiment polarity (uses Groq if `GROQ_API_KEY` is set, otherwise a simple keyword heuristic).
 
 ---
 
@@ -38,19 +23,14 @@
 ```
 luggage_intel/
 ├── backend/
-│   ├── index.js              ← Node/Express API with Universal Groq LLM Search Engine
-│   ├── package.json
+│   ├── main.py      ← FastAPI API: builds the comparison/winner from real listings
+│   └── scraper.py   ← Calls SerpApi's Google Shopping engine for real listings
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx           ← Modern React UI with Winner Banner & Multi-Store Matrix
-│   │   ├── index.css         ← Glassmorphism & Responsive Design
+│   │   ├── App.jsx     ← React UI: search, winner card, comparison matrix, charts
+│   │   ├── index.css
 │   │   └── main.jsx
-│   ├── package.json
-├── src/
-│   ├── multi_store_engine.py ← Python CLI for multi-store comparison
-│   ├── scraper.py            ← Selenium scraper for Amazon India datasets
-│   ├── sentiment.py          ← Batch LLM sentiment pipeline
-│   └── llm_sentiment.py      ← LangGraph sentiment workflow
+│   └── package.json
 ├── requirements.txt
 └── README.md
 ```
@@ -59,36 +39,34 @@ luggage_intel/
 
 ## 🚀 Quick Setup & How to Run
 
-### 1. Environment Variables
-Create a `.env` file in the root folder or `backend/` directory:
+### 1. Environment variables
+Create a `.env` file in this folder (`luggage_intel/.env`):
 ```env
+# Required for real product data. Free tier: 250 searches/month, no card needed.
+# Sign up at https://serpapi.com/users/sign_up, key at https://serpapi.com/manage-api-key
+SERPAPI_KEY="your_serpapi_key_here"
+
+# Optional -- used only by the Live Review Sentiment Tester. Without it, that
+# feature falls back to a simple keyword-based heuristic instead of an LLM.
 GROQ_API_KEY="your_groq_api_key_here"
 ```
-*(Note: If no API key is provided, the engine will automatically use resilient fallback simulation so all features work seamlessly).*
+Without `SERPAPI_KEY`, product search still works but returns direct "search this store yourself" links instead of live prices — it's upfront about this in the UI rather than showing fabricated numbers.
 
----
-
-### 2. Start Backend API
+### 2. Install Python dependencies
 ```bash
-cd backend
-npm install
-node index.js
+pip install -r requirements.txt
+```
+
+### 3. Start the backend API
+```bash
+uvicorn main:app --app-dir backend --host 0.0.0.0 --port 5000
 ```
 Runs at `http://localhost:5000`
 
----
-
-### 3. Start Frontend UI
+### 4. Start the frontend
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Opens in your browser at `http://localhost:5173`
-
----
-
-### 4. (Optional) Run CLI Comparison in Python
-```bash
-python src/multi_store_engine.py "Sony WH-1000XM4"
-```
+Opens at `http://localhost:5173`
