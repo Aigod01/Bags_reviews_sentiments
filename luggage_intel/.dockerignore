@@ -1,0 +1,12 @@
+**/__pycache__
+**/*.pyc
+.env
+.env.*
+!*.env.example
+data/*.csv
+data/*.json
+.git
+.gitignore
+README.md
+frontend/node_modules
+frontend/dist

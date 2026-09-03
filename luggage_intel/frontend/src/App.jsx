@@ -9,7 +9,10 @@ import {
   Layers, MessageSquare, Zap, RefreshCw, Check, Info, Tag, ArrowRight
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Strip any trailing slash(es) so `${API_URL}/api/...` never produces a
+// double slash (e.g. VITE_API_URL set to "https://host.com/" -> "https://host.com//api/...",
+// which the backend treats as a 404 instead of the real route).
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/+$/, '');
 
 const SUGGESTIONS = [
   "Sony WH-1000XM4 Noise Cancelling",
@@ -57,7 +60,12 @@ function App() {
       setComparisonData(res.data);
     } catch (err) {
       console.error("Search failed", err);
-      alert("Failed to compare products. Please ensure the backend server is running on port 5000.");
+      const detail = err.response
+        ? `Server responded with ${err.response.status}: ${err.response.data?.detail || err.response.statusText}`
+        : err.request
+          ? `No response from ${API_URL} -- it may be starting up (free-tier backends can take ~30s to wake) or unreachable.`
+          : err.message;
+      alert(`Failed to compare products. ${detail}`);
     } finally {
       clearTimeout(stepTimer1);
       clearTimeout(stepTimer2);
