@@ -9,6 +9,8 @@ import {
   Layers, MessageSquare, Zap, RefreshCw, Check, Info, Tag, ArrowRight
 } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const SUGGESTIONS = [
   "Sony WH-1000XM4 Noise Cancelling",
   "OnePlus Nord CE 4",
@@ -48,7 +50,7 @@ function App() {
     const stepTimer2 = setTimeout(() => setLoadingStep(3), 1500);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/search', {
+      const res = await axios.post(`${API_URL}/api/search`, {
         query: q,
         maxBudget: maxBudget ? parseFloat(maxBudget) : undefined
       });
@@ -69,7 +71,7 @@ function App() {
     setTestingReview(true);
     setLiveResult(null);
     try {
-      const res = await axios.post('http://localhost:5000/api/analyze', { review: liveReview });
+      const res = await axios.post(`${API_URL}/api/analyze`, { review: liveReview });
       setLiveResult(res.data);
     } catch (err) {
       console.error("Live analysis failed", err);
